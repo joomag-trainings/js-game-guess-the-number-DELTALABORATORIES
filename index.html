@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guess The Number!!!</title>
+    <link href="Styles/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Pacifico|Passion+One" rel="stylesheet">
+</head>
+<body>
+ <div class="Main" id="Container">
+     <div class="Container">
+         <p class="Tries" id="tries">
+             0
+         </p>
+          <p class="GameName">
+              Let's Guess The Right Number
+          </p>
+         <p id="lowerOrHigher" class="GameName" style="visibility: hidden">Some Text</p>
+         <input type="text" name="number" id="guessInput">
+         <button id="guessSubmit">Submit</button>
+         <p id="resultMessage" class="GameName" style="visibility: hidden">Some Text</p>
+         <button id="resetButton" style="visibility: hidden">Reset</button>
+         <p class="LastInput" id="lastInput">
+             Please Enter a Number!
+         </p>
+     </div>
+     <script>
+
+         var randomNumber;
+         var attemptsCount = 0;
+         var guessInput = document.getElementById('guessInput');
+         var guessSubmit = document.getElementById('guessSubmit');
+         var lowerOrHigher = document.getElementById('lowerOrHigher');
+         var resultMessage = document.getElementById('resultMessage');
+
+         function generateRandomNumber() {
+             return Math.floor(Math.random() * 100);
+         }
+
+         function guessNumber() {
+             attemptsCount++;
+             var tries = document.getElementById('tries');
+             tries.textContent = attemptsCount;
+             var submittedNumber = parseInt(guessInput.value);
+             var lastInput = document.getElementById('lastInput');
+             lastInput.textContent = 'Your Last Input was ' + submittedNumber;
+
+             if (submittedNumber === randomNumber) {
+                 resultMessage.textContent = 'YOU WON!!!';
+                 resultMessage.style.visibility = 'visible'
+                 gameOver();
+             } else {
+                 if (attemptsCount < 10) {
+                     if (submittedNumber < randomNumber) {
+                         lowerOrHigher.textContent = 'Last guess was too low!';
+                         lowerOrHigher.style.visibility = 'visible'
+                     } else {
+                         lowerOrHigher.textContent = 'Last guess was too high!';
+                         lowerOrHigher.style.visibility = 'visible'
+                     }
+                 } else {
+                     resultMessage.textContent = 'GAME OVER!!!';
+                     resultMessage.style.visibility = 'visible'
+                     gameOver();
+                 }
+             }
+
+             guessInput.value = '';
+             guessInput.focus();
+         }
+
+         function gameOver() {
+             guessInput.disabled = 'disabled';
+             guessSubmit.disabled = 'disabled';
+
+             var resetButton = document.getElementById('resetButton');
+             resetButton.style.visibility = 'visible'
+             resetButton.addEventListener('click', reset);
+
+         }
+
+         function reset() {
+             var resetButton = document.getElementById('resetButton');
+             guessInput.removeAttribute('disabled');
+             guessSubmit.removeAttribute('disabled');
+             resetButton.style.visibility = 'hidden';
+             randomNumber = generateRandomNumber();
+             attemptsCount = 0;
+             lowerOrHigher.style.visibility = 'hidden';
+             resultMessage.style.visibility = 'hidden';
+             var tries = document.getElementById('tries');
+             tries.textContent = '0';
+             var lastInput = document.getElementById('lastInput');
+             lastInput.textContent = 'Please Enter a Number';
+         }
+
+         randomNumber = generateRandomNumber();
+         guessSubmit.addEventListener('click', guessNumber);
+     </script>
+ </div>
+</body>
+</html>
